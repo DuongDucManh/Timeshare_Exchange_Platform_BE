@@ -147,20 +147,20 @@ class AdminService {
         }
     }
     async getAccountDetailsById(id){
-        const requests = await getAllRequestByUserId(id);
-        const payments = await getAllPaymentByUserId(id);
-        const reservations = await getAllReservationByUserId(id);
-        const resorts = await getAllResortByUserId(id);
-        const timeshares = await getAllTimeshareByUserId(id);
-        const trips = await getAllTripByUserId(id);
-        const personalDetail = await getPersonalAccountDetail(id);
+        const requests = await this.getAllRequestByUserId(id);
+        const payments = await this.getAllPaymentByUserId(id);
+        const reservations = await this.getAllReservationByUserId(id);
+        const resorts = await this.getAllResortByUserId(id);
+        const timeshares = await this.getAllTimeshareByUserId(id);
+        const trips = await this.getAllTripByUserId(id);
+        const personalDetail = await this.getPersonalAccountDetail(id);
 
         return {
-            requests, 
-            payments, 
-            reservations, 
-            resorts, 
-            timeshares, 
+            requests,
+            payments,
+            reservations,
+            resorts,
+            timeshares,
             trips,
             personalDetail
         };
@@ -192,7 +192,6 @@ class AdminService {
             console.log("error in get payment" + error);
         }
     }
-
     //Resort management
     async banResort(id){
         try {
