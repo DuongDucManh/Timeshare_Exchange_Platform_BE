@@ -178,7 +178,8 @@ class AdminController {
                 status:{
                     code: res.statusCode,
                     message: 'Having no resort'
-                }
+                },
+                data:[]
             })
             return;
         }
@@ -202,6 +203,32 @@ class AdminController {
             data: allPayment
         })
     }
+
+    //[GET] /account-details/:id
+    async AccountDetails(req, res, next){
+        const details = adminServices.getAccountDetailsById(req.params.id);
+        
+        res.status(StatusCodes.OK).json({
+            status:{
+                code: res.statusCode,
+                message: 'Account found'
+            },
+            data: details
+        })
+    }
+    //[GET] /ban-resort/:id
+    async BanResort(req, res, next){
+        adminServices.banResort(req.params.id);
+        
+        res.status(StatusCodes.OK).json({
+            status:{
+                code: res.statusCode,
+                message: 'resort banned success'
+            },
+            data: []
+        })
+    }
+
 }
 
 module.exports = new AdminController;

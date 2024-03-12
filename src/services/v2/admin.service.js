@@ -1,6 +1,10 @@
 const UserModel = require('../../models/users');
 const RequestModel = require('../../models/requests');
 const PaymentModel = require('../../models/payments');
+const ReservationModel = require('../../models/reservations');
+const ResortModel = require('../../models/resorts');
+const TimeshareModel = require('../../models/timeshares');
+const TripModel = require('../../models/trips');
 const {StatusCodes} = require('http-status-codes');
 const query = require('../../utils/query')
 
@@ -13,7 +17,6 @@ class AdminService {
             throw new Error(`Error find request: ${error.message}`);
         }
     }
-
     async getAllPendingRequests(){
         try{
             return RequestModel.find({ status: 'pending' });
@@ -21,7 +24,6 @@ class AdminService {
             throw new Error(`Error find pending request: ${error.message}`);
         }
     }
-
     async confirmARequest(id){
         try {
             return RequestModel.updateOne({ _id: id }, { status: 'confirmed' });
@@ -29,7 +31,6 @@ class AdminService {
             throw new Error(`Error confirm request: ${error.message}`);
         }
     }
-
     async cancelRequest(id){
         try {
             return RequestModel.updateOne({ _id: id }, { status: 'canceled' });
@@ -37,7 +38,6 @@ class AdminService {
             throw new Error(`Error confirm request: ${error.message}`);
         }
     }
-
     //Account management
     async banAccount(id){
         try {
@@ -57,7 +57,7 @@ class AdminService {
         try {
             return UserModel.updateOne({ _id: id }, {isBanned: false});
         } catch (error) {
-            throw new Error(`Error ban account: ${error.message}`);
+            throw new Error(`Error unban account: ${error.message}`);
         }
     }
     async softDeleteAccount(id) {
@@ -82,8 +82,7 @@ class AdminService {
         } catch (error) {
             console.error('Error deleting user:', error);
         }
-    }
-    
+    }  
     async restoreAccount(id){
         try {
             return UserModel.updateOne({_id: id}, { isDeleted: false });
@@ -91,13 +90,88 @@ class AdminService {
             console.error('Error restore user:', error);
         }
     }
-
     async getAllAccount(){
         try{
             return UserModel.find({isDeleted: false, isBanned: false});
         }catch(err){
             throw new Error(`Error in get account: ${error.message}`);
         }
+    }
+    async getAllRequestByUserId(id){
+        try{
+            return RequestModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get RequestModel by user id: ${error.message}`);
+        }
+    }
+    async getAllPaymentByUserId(id){
+        try{
+            return PaymentModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get PaymentModel by user id: ${error.message}`);
+        }
+    }
+    async getAllReservationByUserId(id){
+        try{
+            return ReservationModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get ReservationModel by user id: ${error.message}`);
+        }
+    }
+    async getAllResortByUserId(id){
+        try{
+            return ResortModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get ResortModel by user id: ${error.message}`);
+        }
+    }
+    async getAllTimeshareByUserId(id){
+        try{
+            return TimeshareModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get TimeshareModel by user id: ${error.message}`);
+        }
+    }
+    async getAllTripByUserId(id){
+        try{
+            return TripModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get TripModel by user id: ${error.message}`);
+        }
+    }
+    async getPersonalAccountDetail(id){
+        try{
+            return UserModel.find({userId: id});
+        } catch (error) {
+            throw new Error(`Error get UserModel by user id: ${error.message}`);
+        }
+    }
+    async getAccountDetailsById(id){
+        const requests = await getAllRequestByUserId(id);
+        const payments = await getAllPaymentByUserId(id);
+        const reservations = await getAllReservationByUserId(id);
+        const resorts = await getAllResortByUserId(id);
+        const timeshares = await getAllTimeshareByUserId(id);
+        const trips = await getAllTripByUserId(id);
+        const personalDetail = await getPersonalAccountDetail(id);
+
+        return {
+            requests, 
+            payments, 
+            reservations, 
+            resorts, 
+            timeshares, 
+            trips,
+            personalDetail
+        };
+    }
+
+    //report-balance
+    async getAllPostInAMonth(){
+        
+    }
+    async getAnnualIncome(){
+
     }
 
     // async getAllUserAccount(){
@@ -118,6 +192,60 @@ class AdminService {
             console.log("error in get payment" + error);
         }
     }
+
+    //Resort management
+    async banResort(id){
+        try {
+            return ResortModel.updateOne({ _id: id }, {isBanned: true});
+        } catch (error) {
+            throw new Error(`Error ban ResortModel: ${error.message}`);
+        }
+    }
+    async getAllBannedResort(){
+        try {
+            return ResortModel.find({isBanned: true, isDeleted: false});
+        } catch (error) {
+            throw new Error(`Error show ban ResortModel: ${error.message}`);
+        }
+    }
+    async unbanResort(id){
+        try {
+            return ResortModel.updateOne({ _id: id }, {isBanned: false});
+        } catch (error) {
+            throw new Error(`Error unban ResortModel: ${error.message}`);
+        }
+    }
+    async softDeleteResort(id) {
+        try {
+            return ResortModel.updateOne({_id: id}, {isDeleted: true});
+        } catch (error) {
+            console.error('Error soft deleting ResortModel:', error);
+        }
+    }
+    async forceDeleteResort(id){
+        try {
+            return ResortModel.deleteOne({_id: id});
+            
+        } catch (error) {
+            console.error('Error deleting ResortModel:', error);
+        }
+    }
+    async getDeletedResort(){
+        try {
+            return ResortModel.find({isDeleted: true});
+
+        } catch (error) {
+            console.error('Error deleted ResortModel:', error);
+        }
+    }  
+    async restoreResort(id){
+        try {
+            return ResortModel.updateOne({_id: id}, { isDeleted: false });
+        } catch (error) {
+            console.error('Error restore ResortModel:', error);
+        }
+    }
+    
 }
 
 module.exports = new AdminService;

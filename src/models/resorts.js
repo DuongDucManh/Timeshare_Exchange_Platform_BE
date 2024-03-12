@@ -27,6 +27,16 @@ const resortSchema = new mongoose.Schema({
         type: String
     }],
     units: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Units' }],
+    isBanned: [{
+        type: Boolean,
+        required: true,
+        default: false
+    }],
+    isDeleted: [{
+        type: Boolean,
+        required: true,
+        default: false
+    }]
 });
 
 resortSchema.plugin(paginate);

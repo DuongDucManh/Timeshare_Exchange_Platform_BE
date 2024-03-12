@@ -11,7 +11,7 @@ router.delete('/delete-account/:id', Admin.DeleteAccount);
 router.get('/restore-account/:id', Admin.RestoreAccount);
 router.get('/deleted-account-list', Admin.ShowDeletedAccount);
 router.delete('/force-delete-account/:id', Admin.ForceDeleteAccount);
-
+router.get('/account-details/:id', Admin.AccountDetails);
 
 //Post management
 // router.get('/post-list', Admin.GetAllPost);
@@ -24,6 +24,7 @@ router.get('/request-list', Admin.ShowAllRequest);
 
 //Resort management
 router.get('/resort-list', Admin.GetAllResort);
+router.get('/ban-resort/:id', Admin.BanResort);
 
 //Report balance
 router.get('/report-balance', Admin.ShowAllPayment);
