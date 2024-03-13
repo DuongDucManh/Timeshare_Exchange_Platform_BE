@@ -4,23 +4,10 @@ const { resortServices } = require('../../services/v2');
 const { StatusCodes } = require('http-status-codes');
 
 class AdminController {
-    // [GET] /
-    // async AdminHomepage(req, res, next){
-    //     //show res.render adminpage ---> admin dashboard
-    // }
     
     // [GET] /account-list
     async GetAllAccounts(req, res, next){
         const allAccounts = await adminServices.getAllAccount();
-        if(!allAccounts){
-            res.status(StatusCodes.OK).json({
-                status:{
-                    code: res.statusCode,
-                    message: 'Having no account'
-                }
-            })
-            return;
-        }
         res.status(StatusCodes.OK).json({
             status: {
                 code: res.statusCode,
@@ -65,7 +52,7 @@ class AdminController {
         })
     }
 
-    //[GET] /force-delete-account/:id
+    //[DELETE] /force-delete-account/:id
     async ForceDeleteAccount(req, res, next){
         await adminServices.forceDeleteAccount(req.params.id);
         res.status(StatusCodes.OK).json({
@@ -77,7 +64,7 @@ class AdminController {
         })
     }
     
-    //[GET] /delete-account/:id
+    //[DELETE] /delete-account/:id
     async DeleteAccount(req, res, next){
         await adminServices.softDeleteAccount(req.params.id);
         res.status(StatusCodes.OK).json({
@@ -115,7 +102,7 @@ class AdminController {
 
     //[GET] /post-list
     async GetAllPost(req, res, next){
-        const allpost = await postServices.GetAllPosts();
+        const allpost = await postServices.GetAllPost();
         res.status(StatusCodes.OK).json({
             status:{
                 code: res.statusCode,
@@ -127,7 +114,7 @@ class AdminController {
 
     //[GET] /report-balance
     async ReportBalance(req, res, next){
-
+        
     }
 
     //[GET] /request-list
@@ -191,7 +178,8 @@ class AdminController {
                 status:{
                     code: res.statusCode,
                     message: 'Having no resort'
-                }
+                },
+                data:[]
             })
             return;
         }
@@ -215,6 +203,32 @@ class AdminController {
             data: allPayment
         })
     }
+
+    //[GET] /account-details/:id
+    async AccountDetails(req, res, next){
+        const details = adminServices.getAccountDetailsById(req.params.id);
+        
+        res.status(StatusCodes.OK).json({
+            status:{
+                code: res.statusCode,
+                message: 'Account found'
+            },
+            data: details
+        })
+    }
+    //[GET] /ban-resort/:id
+    async BanResort(req, res, next){
+        adminServices.banResort(req.params.id);
+        
+        res.status(StatusCodes.OK).json({
+            status:{
+                code: res.statusCode,
+                message: 'resort banned success'
+            },
+            data: []
+        })
+    }
+
 }
 
 module.exports = new AdminController;
